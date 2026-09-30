@@ -1,47 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Models;
 
-use App\Models\ItemCategory;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ItemCategoriesController extends Controller
+class ItemCategory extends Model
 {
-    public function index()
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = [
+        'nama',
+    ];
+
+    public function masterItems()
     {
-        $categories = ItemCategory::orderBy('id')->get();
-
-        return view('item_categories.index', compact('categories'));
-    }
-
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-        ]);
-
-        ItemCategory::create($validated);
-
-        return redirect('item-categories');
-    }
-
-    public function update(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-        ]);
-
-        $category = ItemCategory::findOrFail($id);
-        $category->update($validated);
-
-        return redirect('item-categories');
-    }
-
-    public function delete($id)
-    {
-        $category = ItemCategory::findOrFail($id);
-        $category->delete();
-
-        return redirect('item-categories');
+        return $this->belongsToMany(
+            MasterItem::class,
+            'item_category_master_item'
+        );
     }
 }

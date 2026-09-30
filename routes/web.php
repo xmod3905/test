@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ItemCategoriesController;
+use App\Http\Controllers\ItemCategoryPdfController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,3 +37,12 @@ Route::get('/item-categories', [ItemCategoriesController::class, 'index']);
 Route::post('/item-categories', [ItemCategoriesController::class, 'store']);
 Route::put('/item-categories/{id}', [ItemCategoriesController::class, 'update']);
 Route::delete('/item-categories/{id}', [ItemCategoriesController::class, 'delete']);
+
+Route::get(
+    '/item-categories/{id}/pdf',
+    [ItemCategoryPdfController::class, 'print']
+)->name('item-categories.pdf');
+Route::get(
+    '/master-items/export',
+    [App\Http\Controllers\MasterItemsController::class, 'export']
+)->name('master-items.export');

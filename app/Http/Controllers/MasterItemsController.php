@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\ItemCategory;
+use App\Models\ItemCategory;
 use App\Models\MasterItem;
 use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class MasterItemsController extends Controller
 {
@@ -15,10 +17,10 @@ class MasterItemsController extends Controller
     public function search(Request $request)
     {
         $validated = $request->validate([
-            'kode'     => 'nullable||string',
-            'nama'     => 'nullable||string',
-            'hargamin' => 'nullable||numeric||min:0',
-            'hargamax' => 'nullable||numeric||min:0||gte:hargamin',
+            'kode'     => 'nullable|string',
+            'nama'     => 'nullable|string',
+            'hargamin' => 'nullable|numeric|min:0',
+            'hargamax' => 'nullable|numeric|min:0|gte:hargamin',
         ]);
 
         $data_search = MasterItem::query();
@@ -53,18 +55,18 @@ class MasterItemsController extends Controller
     public function formView($method, $id = 0)
     {
         if ($method == 'new') {
-            $item = [];
+            $item = new MasterItem;
         } else {
             $item = MasterItem::with('categories')->findOrFail($id);
         }
 
         $categories = ItemCategory::orderBy('nama')->get();
 
-        $data['item']       = $item;
-        $data['method']     = $method;
-        $data['categories'] = $categories;
-
-        return view('master_items.form.index', $data);
+        return view('master_items.form.index', [
+            'item'       => $item,
+            'method'     => $method,
+            'categories' => $categories,
+        ]);
     }
 
     public function singleView($kode)
@@ -150,5 +152,55 @@ class MasterItemsController extends Controller
         $array  = ['Obat', 'Alkes', 'Matkes', 'Umum', 'ATK'];
         $random = rand(0, 4);
         return $array[$random];
+    }
+    public function export()
+    {
+        $items = MasterItem::with('categories')
+            ->orderBy('id')
+            ->get();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet       = $spreadsheet->getActiveSheet();
+
+        $sheet->fromArray([
+            [
+                'Kode',
+                'Nama',
+                'Jenis',
+                'Harga Beli',
+                'Laba',
+                'Supplier',
+                'Category',
+            ],
+        ], null, 'A1');
+
+        $row = 2;
+
+        foreach ($items as $item) {
+            $sheet->fromArray([
+                [
+                    $item->kode,
+                    $item->nama,
+                    $item->jenis,
+                    $item->harga_beli,
+                    $item->laba,
+                    $item->supplier,
+                    $item->categories
+                        ->pluck('nama')
+                        ->implode(', '),
+                ],
+            ], null, 'A' . $row);
+
+            $row++;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+
+        return response()->streamDownload(
+            function () use ($writer) {
+                $writer->save('php://output');
+            },
+            'master-items.xlsx'
+        );
     }
 }

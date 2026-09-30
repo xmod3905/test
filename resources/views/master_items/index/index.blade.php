@@ -7,6 +7,14 @@
             <div class="form-group mb-2">
                 <a href="{{url('master-items/form/new')}}" class="btn btn-secondary">+ Master Items Baru</a>
             </div>
+            <div class="form-group mb-2">
+                <a
+        href="{{ route('master-items.export') }}"
+        class="btn btn-success"
+    >
+        Download Excel
+    </a>
+            </div>
             <div class="card">
                 <div class="card-header">Daftar Master Items</div>
 

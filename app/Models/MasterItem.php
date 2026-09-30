@@ -1,11 +1,10 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use ItemCategory;
+use App\Models\ItemCategory;
 
 class MasterItem extends Model
 {
@@ -22,10 +21,10 @@ class MasterItem extends Model
     ];
 
     public function categories()
-{
-    return $this->belongsToMany(
-        ItemCategory::class,
-        'item_category_master_item'
-    );
-}
+    {
+        return $this->belongsToMany(
+            ItemCategory::class,
+            'item_category_master_item'
+        );
+    }
 }

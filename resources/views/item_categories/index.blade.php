@@ -1,5 +1,11 @@
 <h1>Item Categories</h1>
-
+<a
+    href="{{ route('item-categories.pdf', $category->id) }}"
+    class="btn btn-danger btn-sm"
+    target="_blank"
+>
+    PDF
+</a>
 <form method="POST" action="{{ url('item-categories') }}">
     @csrf
 
