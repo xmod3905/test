@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ItemCategoriesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,5 +30,9 @@ Route::post('/master-items/form/{method}/{id?}', [App\Http\Controllers\MasterIte
 Route::get('/master-items/view/{kode}', [App\Http\Controllers\MasterItemsController::class, 'singleView']);
 Route::get('/master-items/delete/{id}', [App\Http\Controllers\MasterItemsController::class, 'delete']);
 
-
 Route::get('/master-items/update-random-data', [App\Http\Controllers\MasterItemsController::class, 'updateRandomData']);
+
+Route::get('/item-categories', [ItemCategoriesController::class, 'index']);
+Route::post('/item-categories', [ItemCategoriesController::class, 'store']);
+Route::put('/item-categories/{id}', [ItemCategoriesController::class, 'update']);
+Route::delete('/item-categories/{id}', [ItemCategoriesController::class, 'delete']);

@@ -1,0 +1,40 @@
+use App\Models\MasterItem;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+
+class ItemCategory extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = [
+        'nama',
+    ];
+
+    public function masterItems()
+    {
+        return $this->belongsToMany(
+            MasterItem::class,
+            'item_category_master_item'
+        );
+    }
+}[90m⏎[39m
+use App\Models\MasterItem;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+
+class ItemCategory extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = [
+        'nama',
+    ];
+
+    public function masterItems()
+    {
+        return $this->belongsToMany(
+            MasterItem::class,
+            'item_category_master_item'
+        );
+    }
+}[90m⏎[39m

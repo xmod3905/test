@@ -1,4 +1,4 @@
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     @csrf
     @if($method == 'edit')
     <div class="form-group">
@@ -6,6 +6,11 @@
         <input type="text" class="form-control" name="kode_barang" required readonly value="{{$item->kode ?? ''}}">
     </div>
     @endif
+
+    <div class="form-group">
+        <label>Foto</label>
+        <input type="file" class="form-control" name="foto" accept="image/">
+    </div>
 
     <div class="form-group">
         <label>Nama</label>
@@ -21,6 +26,7 @@
         <label>Laba (dalam persen)</label>
         <input type="number" class="form-control" name="laba" required  value="{{$item->laba ?? ''}}">
     </div>
+
 
     @php $selected = $item->supplier ?? ''; @endphp
     <div class="form-group">
@@ -47,6 +53,27 @@
             <optio @if($selected == 'ATK') selected @endif>ATK</option>
         </select>
     </div>
+
+    <div>
+    <label>Category</label>
+
+    @foreach ($categories as $category)
+        <div class="form-group">
+            <input
+                type="checkbox"
+                name="categories[]"
+                value="{{ $category->id }}"
+                @if ($item->categories->contains($category->id))
+                    checked
+                @endif
+            >
+
+            <label>
+                {{ $category->nama }}
+            </label>
+        </div>
+    @endforeach
+</div>
 
     <button class="btn btn-primary mt-3">Submit</button>
 
